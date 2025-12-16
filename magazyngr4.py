@@ -1,6 +1,5 @@
 import streamlit as st
-# Dodaję emotikonę Mikołaja (🎅) do tytułu okna przeglądarki i Streamlit.
-# Należy to zrobić przy pomocy funkcji st.set_page_config() na samym początku.
+# Ustawienie ikony Mikołaja dla karty przeglądarki
 st.set_page_config(page_title="Magazyn Mikołaja", page_icon="🎅")
 
 # --- Funkcje Logiki Magazynowej (BEZ ZMIAN) ---
@@ -24,8 +23,30 @@ def usun_produkt(nazwa_produktu):
 # --- Główna Aplikacja Streamlit (POPRAWIONA) ---
 
 def main():
-    # Zmiana tytułu - dodanie Mikołaja i świątecznego akcentu
-    st.title("🎅✨ Magazyn Mikołaja - Świąteczna Edycja")
+    
+    # Użycie kolumn dla lepszego układu nagłówka (Choinka w rogu)
+    col1, col2 = st.columns([4, 1]) # 4 części dla tytułu, 1 część dla choinki
+    
+    with col1:
+        # Główny tytuł
+        st.title("🎅✨ Magazyn Mikołaja - Świąteczna Edycja")
+        
+    with col2:
+        # Choinka w prawym górnym rogu (duża emotikona)
+        st.markdown(
+            """
+            <style>
+            .christmas-tree {
+                font-size: 5em; /* Ustawienie dużego rozmiaru */
+                text-align: right;
+                line-height: 1.2; /* Drobna korekta pionowego położenia */
+            }
+            </style>
+            <div class="christmas-tree">🎄</div>
+            """, 
+            unsafe_allow_html=True
+        )
+
     st.markdown("---")
 
     # 1. Inicjalizacja Magazynu w Session State
@@ -36,7 +57,6 @@ def main():
     
     nowy_produkt = st.text_input("Wpisz nazwę prezentu:", key="input_dodaj")
     
-    # POPRAWKA 1: Dodanie unikalnego klucza (key) do przycisku dodawania
     if st.button("Dodaj do Magazynu Prezentów", key="btn_dodaj"):
         dodaj_produkt(nowy_produkt.strip())
         
@@ -48,6 +68,7 @@ def main():
     if st.session_state.magazyn:
         posortowany_magazyn = sorted(st.session_state.magazyn)
         
+        # Użycie kolumny do wyświetlenia magazynu, aby zachować odstęp od choinki
         st.code('\n'.join(posortowany_magazyn), language='text')
 
         st.markdown("---")
@@ -63,7 +84,6 @@ def main():
             key="select_usun"
         )
         
-        # POPRAWKA 2: Użycie JEDNEGO przycisku z unikalnym kluczem
         if st.button("Usuń z Magazynu", key="btn_usun"):
             if produkt_do_usunięcia != "-- Wybierz --":
                 usun_produkt(produkt_do_usunięcia)
