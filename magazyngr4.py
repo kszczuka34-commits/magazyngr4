@@ -1,4 +1,7 @@
 import streamlit as st
+# Dodaję emotikonę Mikołaja (🎅) do tytułu okna przeglądarki i Streamlit.
+# Należy to zrobić przy pomocy funkcji st.set_page_config() na samym początku.
+st.set_page_config(page_title="Magazyn Mikołaja", page_icon="🎅")
 
 # --- Funkcje Logiki Magazynowej (BEZ ZMIAN) ---
 
@@ -17,32 +20,30 @@ def usun_produkt(nazwa_produktu):
     if nazwa_produktu in st.session_state.magazyn:
         st.session_state.magazyn.remove(nazwa_produktu)
         st.success(f"Usunięto produkt: **{nazwa_produktu}**")
-    # Poniższe else nie jest potrzebne w tej logice, bo produkt zawsze jest z selectboxa
-    # else:
-    #     st.warning(f"Produkt **{nazwa_produktu}** nie został znaleziony w magazynie.")
 
 # --- Główna Aplikacja Streamlit (POPRAWIONA) ---
 
 def main():
-    st.title("📦 Prosta Aplikacja Magazynowa")
+    # Zmiana tytułu - dodanie Mikołaja i świątecznego akcentu
+    st.title("🎅✨ Magazyn Mikołaja - Świąteczna Edycja")
     st.markdown("---")
 
     # 1. Inicjalizacja Magazynu w Session State
     if 'magazyn' not in st.session_state:
         st.session_state.magazyn = [] 
 
-    st.header("➕ Dodaj Produkt")
+    st.header("➕ Dodaj Produkt (Prezent)")
     
-    nowy_produkt = st.text_input("Wpisz nazwę produktu:", key="input_dodaj")
+    nowy_produkt = st.text_input("Wpisz nazwę prezentu:", key="input_dodaj")
     
     # POPRAWKA 1: Dodanie unikalnego klucza (key) do przycisku dodawania
-    if st.button("Dodaj do Magazynu", key="btn_dodaj"):
+    if st.button("Dodaj do Magazynu Prezentów", key="btn_dodaj"):
         dodaj_produkt(nowy_produkt.strip())
         
     st.markdown("---")
 
     # 2. Wyświetlanie Zawartości Magazynu
-    st.header("Aktualna Zawartość Magazynu")
+    st.header("🎁 Aktualna Lista Prezentów w Worku")
     
     if st.session_state.magazyn:
         posortowany_magazyn = sorted(st.session_state.magazyn)
@@ -52,13 +53,12 @@ def main():
         st.markdown("---")
         
         # 3. Usuwanie Produktu
-        st.header("➖ Usuń Produkt")
+        st.header("🗑️ Usuń Produkt (Zepsuty lub Niegrzeczny)")
         
-        # Opcje do selectboxa
         opcje_usun = ["-- Wybierz --"] + posortowany_magazyn
         
         produkt_do_usunięcia = st.selectbox(
-            "Wybierz produkt do usunięcia:", 
+            "Wybierz prezent do usunięcia:", 
             options=opcje_usun,
             key="select_usun"
         )
@@ -71,7 +71,7 @@ def main():
                 st.warning("Musisz wybrać produkt do usunięcia.")
 
     else:
-        st.info("Magazyn jest obecnie pusty.")
+        st.info("🎁 Worek Mikołaja jest pusty! Czas zacząć produkcję!")
 
 # Uruchomienie głównej funkcji
 if __name__ == "__main__":
